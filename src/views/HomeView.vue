@@ -72,25 +72,36 @@
 </template>
 
 <script>
-// @ is an alias to /src
+
 
 export default {
   data() {
-    return { data: [] };
+    return {
+      data: [],
+      keyword: "전체",
+    };
   },
+
   methods: {
     keywordChange(value) {
       this.keyword = value;
       this.newsList();
     },
+
     newsList() {
-      fetch(`https://react-todo-u1jz.vercel.app/news?keyword=${this.keyword}`)
+      const searchKeyword =
+        this.keyword === "전체" ? "뉴스" : this.keyword;
+
+      fetch(
+        `https://react-todo-u1jz.vercel.app/news?keyword=${searchKeyword}`
+      )
         .then((res) => res.json())
         .then((res) => {
           this.data = res;
           console.log(res);
         });
     },
+
     formatDate(dateString) {
       const date = new Date(dateString);
 
@@ -107,9 +118,11 @@ export default {
       return `${year}.${month}.${day} (${dayName})`;
     },
   },
+
   mounted() {
     this.newsList();
   },
+
   name: "HomeView",
 };
 </script>
