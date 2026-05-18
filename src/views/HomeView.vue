@@ -59,7 +59,9 @@
           <p v-html="item.description"></p>
         </div>
         <div class="footer">
-          <a :href="item.link"> 자세히 보기 -> </a>
+          <a :href="item.link" target="_blank" rel="noopener noreferrer">
+            자세히 보기 ->
+          </a>
           <small class="date">
             {{ formatDate(item.pubDate) }}
           </small>
