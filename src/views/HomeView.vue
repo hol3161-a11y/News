@@ -2,7 +2,7 @@
   <div class="news">
     <header>
       <div class="news-title">
-        <p>News</p>
+        <p>Now News</p>
         <h1>오늘의 실시간 뉴스</h1>
         <small>최신 뉴스를 빠르고 정확하게 전해드립니다.</small>
       </div>
