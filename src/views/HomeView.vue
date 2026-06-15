@@ -51,7 +51,24 @@
         IT
       </button>
     </div>
-    <ul>
+    <ul v-if="loading" class="skeleton-list">
+      <li v-for="n in 4" :key="n" class="skeleton-card">
+        <div class="skeleton-img"></div>
+        <div class="skeleton-content">
+          <div class="skeleton-title"></div>
+          <div class="skeleton-title short"></div>
+          <div class="skeleton-text"></div>
+          <div class="skeleton-text"></div>
+          <div class="skeleton-text short"></div>
+        </div>
+        <div class="skeleton-footer">
+          <div></div>
+          <div></div>
+        </div>
+      </li>
+    </ul>
+
+    <ul v-else>
       <li v-for="(item, idx) in data" :key="idx">
         <p><img :src="item.image" /></p>
         <div>
@@ -72,13 +89,14 @@
 </template>
 
 <script>
-
-
 export default {
+  name: "HomeView",
+
   data() {
     return {
       data: [],
       keyword: "전체",
+      loading: false,
     };
   },
 
@@ -89,30 +107,26 @@ export default {
     },
 
     newsList() {
-      const searchKeyword =
-        this.keyword === "전체" ? "뉴스" : this.keyword;
+      this.loading = true;
 
-      fetch(
-        `https://react-todo-u1jz.vercel.app/news?keyword=${searchKeyword}`
-      )
+      const searchKeyword = this.keyword === "전체" ? "뉴스" : this.keyword;
+
+      fetch(`https://react-todo-u1jz.vercel.app/news?keyword=${searchKeyword}`)
         .then((res) => res.json())
         .then((res) => {
           this.data = res;
-          console.log(res);
+        })
+        .finally(() => {
+          this.loading = false;
         });
     },
 
     formatDate(dateString) {
       const date = new Date(dateString);
-
       const year = date.getFullYear();
-
       const month = String(date.getMonth() + 1).padStart(2, "0");
-
       const day = String(date.getDate()).padStart(2, "0");
-
       const week = ["일", "월", "화", "수", "목", "금", "토"];
-
       const dayName = week[date.getDay()];
 
       return `${year}.${month}.${day} (${dayName})`;
@@ -122,11 +136,8 @@ export default {
   mounted() {
     this.newsList();
   },
-
-  name: "HomeView",
 };
 </script>
-
 <style lang="scss">
 * {
   margin: 0;
@@ -324,6 +335,82 @@ li {
 .date {
   font-weight: 700;
   color: #98a2b3;
+}
+
+.skeleton-card {
+  height: 650px;
+  cursor: default;
+
+  &:hover {
+    transform: none;
+  }
+}
+
+.skeleton-img,
+.skeleton-title,
+.skeleton-text,
+.skeleton-footer div {
+  background: linear-gradient(90deg, #eef0f5 25%, #f8f9fc 50%, #eef0f5 75%);
+  background-size: 200% 100%;
+  animation: skeletonLoading 1.4s infinite;
+}
+
+.skeleton-img {
+  width: 100%;
+  height: 300px;
+}
+
+.skeleton-content {
+  padding: 24px;
+}
+
+.skeleton-title {
+  width: 90%;
+  height: 24px;
+  margin: 0 auto 14px;
+  border-radius: 8px;
+
+  &.short {
+    width: 65%;
+    margin-bottom: 28px;
+  }
+}
+
+.skeleton-text {
+  width: 100%;
+  height: 14px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+
+  &.short {
+    width: 70%;
+  }
+}
+
+.skeleton-footer {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+
+  display: flex;
+  justify-content: space-between;
+
+  div {
+    width: 90px;
+    height: 16px;
+    border-radius: 8px;
+  }
+}
+
+@keyframes skeletonLoading {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* =========================
